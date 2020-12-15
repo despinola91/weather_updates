@@ -5,6 +5,10 @@
 import requests
 from bs4 import BeautifulSoup
 import json
+from telebot import TeleBot
+
+TOKEN = "TOKEN"
+
 
 weather_data = {
                 "current_temp": "",
@@ -86,13 +90,33 @@ def fill_weather_data(soup):
     weather_data["humidity"] = soup.find(attrs={"data-testid": "PercentageValue"}).string
     weather_data["uv_index"] = soup.find(attrs={"data-testid": "UVIndexValue"}).string
 
-def run():
+def get_weather_update():
     url = 'https://weather.com/es-AR/tiempo/hoy/l/ARBA0009:1:AR?Goto=Redirected'
     r = requests.get(url)
     soup = BeautifulSoup(r.text, "html.parser")
+    fill_weather_data(soup)
+    return json.dumps(weather_data, indent=4, ensure_ascii=False)
 
-    fill_weather_data(soup)    
-    print(json.dumps(weather_data, indent=4, ensure_ascii=False))    
-    
+app = TeleBot(__name__)
+@app.route("/command ?(.*)")
+def example_command(message, cmd):
+    chat_dest = message["chat"]["id"]
+    msg = "Command received: {}".format(cmd)
+
+    app.send_message(chat_dest, msg)
+
+
+@app.route("(?!/).+")
+def send_weather_update(message):
+    chat_dest = message['chat']['id']
+    #user_msg = message['text']
+
+    msg = get_weather_update()
+    app.send_message(chat_dest, msg)
+
+def config(app):
+    app.config['api_key'] = 'TOKEN'
+    app.poll(debug=True)
+
 if __name__ == "__main__":
-    run()
+    config(app)
