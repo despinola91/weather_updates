@@ -1,0 +1,21 @@
+{
+    "update_id": 958118932,
+    "message": {
+        "message_id": 246,
+        "from": {
+            "id": 813425346,
+            "is_bot": false,
+            "first_name": "Dario",
+            "last_name": "Espinola",
+            "language_code": "es"
+        },
+        "chat": {
+            "id": 813425346,
+            "first_name": "Dario",
+            "last_name": "Espinola",
+            "type": "private"
+        },
+        "date": 1617412912,
+        "text": "Hola"
+    }
+}
