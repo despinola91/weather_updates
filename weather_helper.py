@@ -1,14 +1,6 @@
-# Example of Instagram link:
-
-# https://www.instagram.com/p/CIY38LkHLFF/?utm_source=ig_web_copy_link
-
 import requests
 from bs4 import BeautifulSoup
 import json
-from telebot import TeleBot
-
-TOKEN = "TOKEN"
-
 
 weather_data = {
                 "current_temp": "",
@@ -77,7 +69,6 @@ def fill_forecast(soup):
     weather_data["today_forecast"][3]["temperature"] = general_table.contents[3].find(attrs={"data-testid": "TemperatureValue"}).string
     weather_data["today_forecast"][3]["rain_percentage"] = get_rain_percentage(general_table.contents[3])
 
-
 def fill_weather_data(soup):
     global weather_data
 
@@ -95,28 +86,27 @@ def get_weather_update():
     r = requests.get(url)
     soup = BeautifulSoup(r.text, "html.parser")
     fill_weather_data(soup)
-    return json.dumps(weather_data, indent=4, ensure_ascii=False)
+    msg = f"""
+Hola! La temperatura actual es { weather_data['current_temp'] } y el cielo {weather_data['day_description']}.
 
-app = TeleBot(__name__)
-@app.route("/command ?(.*)")
-def example_command(message, cmd):
-    chat_dest = message["chat"]["id"]
-    msg = "Command received: {}".format(cmd)
+Tiempo durante la mañana:
+Temperatura: {weather_data['today_forecast'][0]['temperature']}
+Porcentaje de lluvia: {weather_data['today_forecast'][0]['rain_percentage']}
+    
+Tiempo durante la tarde:
+Temperatura: {weather_data['today_forecast'][1]['temperature']}
+Porcentaje de lluvia: {weather_data['today_forecast'][1]['rain_percentage']}
+    
+Tiempo durante la noche:
+Temperatura: {weather_data['today_forecast'][2]['temperature']}
+Porcentaje de lluvia: {weather_data['today_forecast'][2]['rain_percentage']}
+    
+Tiempo durante la madrugada:
+Temperatura: {weather_data['today_forecast'][3]['temperature']}
+Porcentaje de lluvia: {weather_data['today_forecast'][3]['rain_percentage']}
 
-    app.send_message(chat_dest, msg)
+Finalmente el maximo y minimo es {weather_data['max_min']}, la humedad de un {weather_data['humidity']} y el indice UV es {weather_data['uv_index']}.
+"""
 
-
-@app.route("(?!/).+")
-def send_weather_update(message):
-    chat_dest = message['chat']['id']
-    #user_msg = message['text']
-
-    msg = get_weather_update()
-    app.send_message(chat_dest, msg)
-
-def config(app):
-    app.config['api_key'] = 'TOKEN'
-    app.poll(debug=True)
-
-if __name__ == "__main__":
-    config(app)
+    #return json.dumps(weather_data, indent=4, ensure_ascii=False)
+    return msg
