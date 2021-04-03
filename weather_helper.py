@@ -87,25 +87,28 @@ def get_weather_update():
     soup = BeautifulSoup(r.text, "html.parser")
     fill_weather_data(soup)
     msg = f"""
-Hola! La temperatura actual es { weather_data['current_temp'] } y el cielo {weather_data['day_description']}.
+Temperatura actual: { weather_data['current_temp'] }
+Cielo: {weather_data['day_description']}.
 
-Tiempo durante la mañana:
+Mañana
 Temperatura: {weather_data['today_forecast'][0]['temperature']}
 Porcentaje de lluvia: {weather_data['today_forecast'][0]['rain_percentage']}
     
-Tiempo durante la tarde:
+Tarde
 Temperatura: {weather_data['today_forecast'][1]['temperature']}
 Porcentaje de lluvia: {weather_data['today_forecast'][1]['rain_percentage']}
     
-Tiempo durante la noche:
+Noche
 Temperatura: {weather_data['today_forecast'][2]['temperature']}
 Porcentaje de lluvia: {weather_data['today_forecast'][2]['rain_percentage']}
     
-Tiempo durante la madrugada:
+Madrugada
 Temperatura: {weather_data['today_forecast'][3]['temperature']}
 Porcentaje de lluvia: {weather_data['today_forecast'][3]['rain_percentage']}
 
-Finalmente el maximo y minimo es {weather_data['max_min']}, la humedad de un {weather_data['humidity']} y el indice UV es {weather_data['uv_index']}.
+Max/min: {weather_data['max_min']}
+Humedad: {weather_data['humidity']}
+Indice UV: {weather_data['uv_index']}.
 """
 
     #return json.dumps(weather_data, indent=4, ensure_ascii=False)
