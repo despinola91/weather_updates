@@ -90,19 +90,19 @@ def get_weather_update():
 Temperatura actual: { weather_data['current_temp'] }
 Cielo: {weather_data['day_description']}.
 
-Mañana
+*Mañana*
 Temperatura: {weather_data['today_forecast'][0]['temperature']}
 Porcentaje de lluvia: {weather_data['today_forecast'][0]['rain_percentage']}
     
-Tarde
+*Tarde*
 Temperatura: {weather_data['today_forecast'][1]['temperature']}
 Porcentaje de lluvia: {weather_data['today_forecast'][1]['rain_percentage']}
     
-Noche
+*Noche*
 Temperatura: {weather_data['today_forecast'][2]['temperature']}
 Porcentaje de lluvia: {weather_data['today_forecast'][2]['rain_percentage']}
     
-Madrugada
+*Madrugada*
 Temperatura: {weather_data['today_forecast'][3]['temperature']}
 Porcentaje de lluvia: {weather_data['today_forecast'][3]['rain_percentage']}
 
