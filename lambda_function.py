@@ -2,6 +2,7 @@ import json
 import requests
 import os
 import weather_helper as wh
+from weather_helper import WeatherInfoHandler
 
 TOKEN = os.environ["TELEGRAM_TOKEN"]
 api_url = f"https://api.telegram.org/bot{TOKEN}/"
@@ -29,7 +30,8 @@ def set_message(params):
     if params['text_received'] == "/start":
         msg = f"Hola {params['first_name']}! Bienvenid@, soy el bot del clima y estoy para brindarte información así no te agarra la lluvia."
     elif params['text_received'] == "Obtener información del clima":
-        msg = wh.get_weather_update()
+        wih = WeatherInfoHandler()
+        msg = wih.get_weather_update()
     else:
         msg = 'No te entiendo nada culiado ' + u'\U0001F937' #person shrugging emoji 🤷
         
