@@ -213,7 +213,8 @@ class Emojis:
         #UV index
         'uvindex_low': '\U0001F600',
         'uvindex_medium': '\U0001F642',
-        'uvindex_high': '\U0001F975'
+        'uvindex_high': '\U0001F975',
+        'uvindex_extreme': '\U00002620'
     }
     
     def get_uvindex_emoji(self, description):
@@ -223,6 +224,8 @@ class Emojis:
             return self.emojis['uvindex_medium']
         if description == "8 de 10" or description == "9 de 10" or description == "10 de 10":
             return self.emojis['uvindex_high']
+        if description == "Extremo":
+            return self.emojis['uvindex_extreme']
         
     def get_day_description_emoji(self, description):
         if description == 'Soleado':
