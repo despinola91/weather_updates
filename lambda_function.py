@@ -27,15 +27,26 @@ def get_event_params(event):
 
 def set_message(params):
     msg = None
+    
     if params['text_received'] == "/start":
-        msg = f"Hola {params['first_name']}! Bienvenid@, soy el bot del clima y estoy para brindarte información así no te agarra la lluvia."
+        msg = get_welcome_message(params)
+        
     elif params['text_received'] == "Obtener información del clima":
         wih = WeatherInfoHandler()
         msg = wih.get_weather_update()
+    
     else:
-        msg = 'No te entiendo nada culiado ' + u'\U0001F937' #person shrugging emoji 🤷
+        msg = get_default_message()
         
     return msg
+
+
+def get_welcome_message(params):
+    return f"Hola {params['first_name']}! Bienvenid@, soy el bot del clima y estoy para brindarte información así no te agarra la lluvia."
+
+
+def get_default_message():
+    return 'No entendí tu mensaje ' + u'\U0001F937' #person shrugging emoji 🤷
 
 
 def lambda_handler(event, context):
