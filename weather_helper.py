@@ -171,9 +171,10 @@ class WeatherInfoHandler:
 
 
     def get_final_message(self):
+        emoji = Emojis()
         msg = f"""
 Temperatura actual: { self.weather_raw_data['current_temp'] }
-Cielo: {self.weather_raw_data['day_description']}.
+Cielo: {self.weather_raw_data['day_description']}  {emoji.get_day_description_emoji(description=self.weather_raw_data['day_description'])}
 
 *Mañana*
 Temperatura: {self.weather_raw_data['today_forecast'][0]['temperature']}
@@ -193,7 +194,38 @@ Porcentaje de lluvia: {self.weather_raw_data['today_forecast'][3]['rain_percenta
 
 Max/min: {self.weather_raw_data['max_min']}
 Humedad: {self.weather_raw_data['humidity']}
-Indice UV: {self.weather_raw_data['uv_index']}.
+Indice UV: {self.weather_raw_data['uv_index']} {emoji.get_uvindex_emoji(description=self.weather_raw_data['uv_index'])}
 """
-        
         return msg
+    
+    
+    
+class Emojis:
+    """Class to retrieve right emojis to add some funny context"""
+    
+    emojis = {
+        #day description
+        'sunny': '\U00002600',
+        'cloudy': '\U000026C5',
+        'rain': '\U0001F327',
+        'storm': '\U000026C8',
+        
+        #UV index
+        'uvindex_low': '\U0001F600',
+        'uvindex_medium': '\U0001F642',
+        'uvindex_high': '\U0001F975'
+    }
+    
+    def get_uvindex_emoji(self, description):
+        if description == "1 de 10" or description == "2 de 10" or description == "3 de 10":
+            return self.emojis['uvindex_low']
+        if description == "4 de 10" or description == "5 de 10" or description == "6 de 10" or description == "7 de 10":
+            return self.emojis['uvindex_medium']
+        if description == "8 de 10" or description == "9 de 10" or description == "10 de 10":
+            return self.emojis['uvindex_high']
+        
+    def get_day_description_emoji(self, description):
+        if description == 'Soleado':
+            return self.emojis['sunny']
+        
+    
