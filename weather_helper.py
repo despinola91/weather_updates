@@ -59,7 +59,7 @@ class WeatherInfoHandler:
     def get_current_temp(self, soup):
         result = ""
         try:
-            result = str(soup.find(attrs={"data-testid": "TemperatureValue", "class": "CurrentConditions--tempValue--3KcTQ"}).string)
+            result = str(soup.find(attrs={"data-testid": "TemperatureValue"}).string)
         except:
             print("Current temp could not be found") 
         
@@ -69,7 +69,7 @@ class WeatherInfoHandler:
     def get_day_description(self, soup):
         result = ""
         try:
-            result = soup.find(attrs={"data-testid": "wxPhrase", "class": "CurrentConditions--phraseValue--2xXSr"}).string
+            result = soup.find(attrs={"data-testid": "wxPhrase"}).string
         except:
             print("Day description could not be found") 
         
@@ -78,7 +78,7 @@ class WeatherInfoHandler:
     
     def fill_forecast(self, soup):
 
-        general_table = soup.find(attrs={"data-testid": "WeatherTable", "class": "WeatherTable--columns--3q5Nx WeatherTable--wide--YogM9"})
+        general_table = soup.find(attrs={"data-testid": "WeatherTable", "class": "WeatherTable--columns--OWgEl WeatherTable--wide--3dFXu"})
         
         if general_table == None:
             print("General table could not be found")
@@ -102,27 +102,37 @@ class WeatherInfoHandler:
             return
             
         #morning
-        self.weather_raw_data["today_forecast"][0]["temperature"] = general_table.contents[0].find(attrs={"data-testid": "TemperatureValue"}).string
+        self.weather_raw_data["today_forecast"][0]["temperature"] = self.get_forecast_temperature(general_table.contents[0])
         self.weather_raw_data["today_forecast"][0]["rain_percentage"] = self.get_rain_percentage(general_table.contents[0])
         
         #afternoon
-        self.weather_raw_data["today_forecast"][1]["temperature"] = general_table.contents[1].find(attrs={"data-testid": "TemperatureValue"}).string
+        self.weather_raw_data["today_forecast"][1]["temperature"] = self.get_forecast_temperature(general_table.contents[1])
         self.weather_raw_data["today_forecast"][1]["rain_percentage"] = self.get_rain_percentage(general_table.contents[1])
 
         #night
-        self.weather_raw_data["today_forecast"][2]["temperature"] = general_table.contents[2].find(attrs={"data-testid": "TemperatureValue"}).string
+        self.weather_raw_data["today_forecast"][2]["temperature"] = self.get_forecast_temperature(general_table.contents[2])
         self.weather_raw_data["today_forecast"][2]["rain_percentage"] = self.get_rain_percentage(general_table.contents[2])
 
         #early morning
-        self.weather_raw_data["today_forecast"][3]["temperature"] = general_table.contents[3].find(attrs={"data-testid": "TemperatureValue"}).string
+        self.weather_raw_data["today_forecast"][3]["temperature"] = self.get_forecast_temperature(general_table.contents[3])
         self.weather_raw_data["today_forecast"][3]["rain_percentage"] = self.get_rain_percentage(general_table.contents[3])
+
+
+    def get_forecast_temperature(self, column):
+        result = ""
+        try:
+            result = column.find(attrs={"data-testid": "TemperatureValue"}).string
+        except:
+            print("Forecast temperature could not be found")
+            
+        return result
 
 
     def get_rain_percentage(self, column):
         result = ""
         try:    
-            if len(column.find("span", attrs={"class": "Column--precip--2H5Iw"}).contents) > 1:
-                result = column.find("span", attrs={"class": "Column--precip--2H5Iw"}).contents[1].string
+            if len(column.find("span", attrs={"class": "Column--precip--2ck8J"}).contents) > 1:
+                result = column.find("span", attrs={"class": "Column--precip--2ck8J"}).contents[1].string
         except:
             print("Rain percentage could not be found")
 
@@ -132,7 +142,7 @@ class WeatherInfoHandler:
     def get_max_min(self, soup):
         result = ""
         try:
-            for child in soup.find(attrs={"data-testid": "wxData", "class": "WeatherDetailsListItem--wxData--23DP5"}).contents: 
+            for child in soup.find(attrs={"data-testid": "wxData", "class": "WeatherDetailsListItem--wxData--2s6HT"}).contents: 
                 result = result + child.string
         except:
             print("Max and min could not be found")
@@ -162,28 +172,28 @@ class WeatherInfoHandler:
 
     def get_final_message(self):
         msg = f"""
-        Temperatura actual: { self.weather_raw_data['current_temp'] }
-        Cielo: {self.weather_raw_data['day_description']}.
+Temperatura actual: { self.weather_raw_data['current_temp'] }
+Cielo: {self.weather_raw_data['day_description']}.
 
-        *Mañana*
-        Temperatura: {self.weather_raw_data['today_forecast'][0]['temperature']}
-        Porcentaje de lluvia: {self.weather_raw_data['today_forecast'][0]['rain_percentage']}
+*Mañana*
+Temperatura: {self.weather_raw_data['today_forecast'][0]['temperature']}
+Porcentaje de lluvia: {self.weather_raw_data['today_forecast'][0]['rain_percentage']}
             
-        *Tarde*
-        Temperatura: {self.weather_raw_data['today_forecast'][1]['temperature']}
-        Porcentaje de lluvia: {self.weather_raw_data['today_forecast'][1]['rain_percentage']}
+*Tarde*
+Temperatura: {self.weather_raw_data['today_forecast'][1]['temperature']}
+Porcentaje de lluvia: {self.weather_raw_data['today_forecast'][1]['rain_percentage']}
             
-        *Noche*
-        Temperatura: {self.weather_raw_data['today_forecast'][2]['temperature']}
-        Porcentaje de lluvia: {self.weather_raw_data['today_forecast'][2]['rain_percentage']}
+*Noche*
+Temperatura: {self.weather_raw_data['today_forecast'][2]['temperature']}
+Porcentaje de lluvia: {self.weather_raw_data['today_forecast'][2]['rain_percentage']}
             
-        *Madrugada*
-        Temperatura: {self.weather_raw_data['today_forecast'][3]['temperature']}
-        Porcentaje de lluvia: {self.weather_raw_data['today_forecast'][3]['rain_percentage']}
+*Madrugada*
+Temperatura: {self.weather_raw_data['today_forecast'][3]['temperature']}
+Porcentaje de lluvia: {self.weather_raw_data['today_forecast'][3]['rain_percentage']}
 
-        Max/min: {self.weather_raw_data['max_min']}
-        Humedad: {self.weather_raw_data['humidity']}
-        Indice UV: {self.weather_raw_data['uv_index']}.
-        """
+Max/min: {self.weather_raw_data['max_min']}
+Humedad: {self.weather_raw_data['humidity']}
+Indice UV: {self.weather_raw_data['uv_index']}.
+"""
         
         return msg
