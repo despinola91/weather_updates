@@ -248,7 +248,7 @@ class Emojis:
     }
     
     def get_uvindex_emoji(self, description):
-        if description == "1 de 10" or description == "2 de 10" or description == "3 de 10":
+        if description == "0 de 10" or description == "1 de 10" or description == "2 de 10" or description == "3 de 10":
             return self.emojis['uvindex_low']
         if description == "4 de 10" or description == "5 de 10" or description == "6 de 10" or description == "7 de 10":
             return self.emojis['uvindex_medium']
