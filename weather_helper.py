@@ -260,5 +260,7 @@ class Emojis:
     def get_day_description_emoji(self, description):
         if description == 'Soleado':
             return self.emojis['sunny']
+        elif description == "Mayormente nublado":
+            return self.emojis['cloudy']
         
     
