@@ -33,7 +33,9 @@ class WeatherInfoHandler:
                                         ],
                         "max_min": "",
                         "humidity": "",
-                        "uv_index": ""
+                        "uv_index": "",
+                        "sunrise_time": "",
+                        "sunset_time":""
                         }
 
 
@@ -54,6 +56,9 @@ class WeatherInfoHandler:
         self.weather_raw_data["max_min"] = self.get_max_min(soup)
         self.weather_raw_data["humidity"] = self.get_humidity(soup)
         self.weather_raw_data["uv_index"] = self.get_uv_index(soup)
+        
+        self.weather_raw_data["sunrise_time"] = self.get_sunrise_time(soup)
+        self.weather_raw_data["sunset_time"] = self.get_sunset_time(soup)
   
     
     def get_current_temp(self, soup):
@@ -170,6 +175,28 @@ class WeatherInfoHandler:
         return result
 
 
+    def get_sunrise_time(self, soup):
+        result = ""
+        try:
+            sunrise = soup.find(attrs={"class":"SunriseSunset--sunriseDateItem--3qqf7", "data-testid":"SunriseValue"})
+            result = sunrise.contents[1].string
+        except:
+            print("Sunrise time could not be found")
+        
+        return result
+    
+    
+    def get_sunset_time(self, soup):
+        result = ""
+        try:
+            sunset = soup.find(attrs={"class": "SunriseSunset--sunsetDateItem--34dPe SunriseSunset--sunriseDateItem--3qqf7", "data-testid":"SunsetValue"})
+            result = sunset.contents[1].string
+        except:
+            print("Sunset time could not be found") 
+        
+        return result
+    
+     
     def get_final_message(self):
         emoji = Emojis()
         msg = f"""
@@ -195,6 +222,9 @@ Porcentaje de lluvia: {self.weather_raw_data['today_forecast'][3]['rain_percenta
 Max/min: {self.weather_raw_data['max_min']}
 Humedad: {self.weather_raw_data['humidity']}
 Indice UV: {self.weather_raw_data['uv_index']} {emoji.get_uvindex_emoji(description=self.weather_raw_data['uv_index'])}
+
+Sunrise time: {self.weather_raw_data['sunrise_time']}
+Sunset time: {self.weather_raw_data['sunset_time']}
 """
         return msg
     
