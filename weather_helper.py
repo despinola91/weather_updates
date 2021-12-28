@@ -179,7 +179,8 @@ class WeatherInfoHandler:
         result = ""
         try:
             sunrise = soup.find(attrs={"class":"SunriseSunset--sunriseDateItem--3qqf7", "data-testid":"SunriseValue"})
-            result = sunrise.contents[1].string
+            emoji = Emojis()
+            result = sunrise.contents[1].string + " " + emoji.emojis["sunrise"]
         except:
             print("Sunrise time could not be found")
         
@@ -190,7 +191,8 @@ class WeatherInfoHandler:
         result = ""
         try:
             sunset = soup.find(attrs={"class": "SunriseSunset--sunsetDateItem--34dPe SunriseSunset--sunriseDateItem--3qqf7", "data-testid":"SunsetValue"})
-            result = sunset.contents[1].string
+            emoji = Emojis()
+            result = sunset.contents[1].string + " " + emoji.emojis["sunset"]
         except:
             print("Sunset time could not be found") 
         
@@ -244,7 +246,9 @@ class Emojis:
         'uvindex_low': '\U0001F600',
         'uvindex_medium': '\U0001F642',
         'uvindex_high': '\U0001F975',
-        'uvindex_extreme': '\U00002620'
+        'uvindex_extreme': '\U00002620',
+        'sunrise': '\U0001F304',
+        'sunset': '\U0001F307'
     }
     
     def get_uvindex_emoji(self, description):
