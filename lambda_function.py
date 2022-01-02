@@ -8,9 +8,31 @@ TOKEN = os.environ["TELEGRAM_TOKEN"]
 api_url = f"https://api.telegram.org/bot{TOKEN}/"
 
 def get_reply_markup():
-    options = list()
-    options.append(['Obtener información del clima'])
-    reply_markup = json.dumps({"keyboard": options, "one_time_keyboard": True})
+    keyboard = list()
+    keyboardbuttons_1stline = list()
+    keyboardbuttons_2ndtline = list()
+    
+    keyboardbuttons_1stline.append('Obtener información del clima')
+    button = {
+        "text": "Enviar ubicación",
+        "request_contact": False,
+        "request_location": True,
+        "request_poll": False
+    }
+    
+    keyboardbuttons_2ndtline.append(button)
+    
+    keyboard.append(keyboardbuttons_1stline)
+    keyboard.append(keyboardbuttons_2ndtline)
+    reply_markup_dict = {
+        "keyboard": keyboard, 
+        # "resize_keyboard": False,
+        # "selective": False,
+        # "input_field_placeholder": "Some text",
+        "one_time_keyboard": True
+    }
+    
+    reply_markup = json.dumps(reply_markup_dict)
 
     return reply_markup
 
