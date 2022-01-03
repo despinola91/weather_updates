@@ -38,10 +38,23 @@ def get_reply_markup():
 
 
 def get_event_params(event):
+    text = ""
+    try:
+        text = event['message']['text']
+    except:
+        print('No text was found in message')
+    
+    location = ""
+    try:
+        location = event['message']['location']
+    except:
+        print('No location was found in message')
+        
     params = {
-        'text_received': event['message']['text'],
+        'text_received': text,
         'first_name': event['message']['from']['first_name'],
-        'chat_id': event['message']['chat']['id']
+        'chat_id': event['message']['chat']['id'],
+        'location': location
     }
     
     return params
@@ -57,6 +70,8 @@ def set_message(params):
         wih = WeatherInfoHandler()
         msg = wih.get_weather_update()
     
+    elif params['location'] != "":
+        msg = get_location_message(params)
     else:
         msg = get_default_message()
         
@@ -67,11 +82,15 @@ def get_welcome_message(params):
     return f"Hola {params['first_name']}! Bienvenid@, soy el bot del clima y estoy para brindarte información así no te agarra la lluvia."
 
 
+def get_location_message(params):
+    return f"Hola! Me enviaste tu ubicacion con latitud {params['location']['latitude']} y longitud {params['location']['longitude']}. Estoy trabajando en esto!"
+
 def get_default_message():
     return 'No entendí tu mensaje ' + u'\U0001F937' #person shrugging emoji 🤷
 
 
 def lambda_handler(event, context):
+    print(json.dumps(event))
     event_params = get_event_params(event)
     msg = set_message(event_params)
     reply_markup = get_reply_markup()
