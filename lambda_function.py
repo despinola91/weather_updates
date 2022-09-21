@@ -4,8 +4,9 @@ import os
 import weather_helper as wh
 from weather_helper import WeatherInfoHandler
 
-TOKEN = os.environ["TELEGRAM_TOKEN"]
-api_url = f"https://api.telegram.org/bot{TOKEN}/"
+TELEGRAM_TOKEN = os.environ["TELEGRAM_TOKEN"]
+WEATHER_API_TOKEN = os.environ["WEATHER_API_TOKEN"]
+api_url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/"
 
 def get_reply_markup():
     keyboard = list()
@@ -83,7 +84,32 @@ def get_welcome_message(params):
 
 
 def get_location_message(params):
-    return f"Hola! Me enviaste tu ubicacion con latitud {params['location']['latitude']} y longitud {params['location']['longitude']}. Estoy trabajando en esto!"
+    #return f"Hola! Me enviaste tu ubicacion con latitud {params['location']['latitude']} y longitud {params['location']['longitude']}. Estoy trabajando en esto!"
+    lat = params['location']['latitude']
+    lon = params['location']['longitude']
+
+    #https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&exclude={part}&appid={API key}
+    res = requests.get(f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={WEATHER_API_TOKEN}&lang=es&units=metric")
+    
+    message = """
+    I'm working on that. 
+    Testing testing.
+    Multiline.
+    """
+    #message = "res.status_code: {res.status_code}  res.url = {res.url}"
+
+    #res.text = {res.text}
+    #json: {json.dumps(res.json(), indent=4)}
+    #res.text
+    #message = json.dumps(res.json(), indent=4)
+    #message = res.text
+    #print("res: " + res)
+    #print(res.text)
+    #message = res.json()
+    #print("res.text: " + res.text)
+    #print(f"res.json(): {res.json()}")
+    #print(f"json.dumps(): {json.dumps(res.json(), indent=4)}")
+    return message
 
 def get_default_message():
     return 'No entendí tu mensaje ' + u'\U0001F937' #person shrugging emoji 🤷
